@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>嵐庭苑 - 已購戶現金流與期程試算表</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --border: #cbd5e1;
+      --bg-gray: #f8fafc;
+      --pay-bg: #ffedd5;
+      --pay-text: #9a3412;
+      --danger: #dc2626;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+      margin: 0;
+      padding: 12px;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 19px;
+      margin: 8px 0 14px 0;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .intro-banner {
+      background: #ffffff;
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      margin-bottom: 16px;
+    }
+    .intro-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    .intro-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+    .user-guide {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #166534;
+    }
+    .user-guide ol {
+      margin: 6px 0 6px 18px;
+      padding: 0;
+    }
+    .user-guide li {
+      margin-bottom: 4px;
+    }
+    .guide-tip {
+      color: #b91c1c;
+      font-weight: bold;
+      margin-top: 6px;
+      display: block;
+    }
+    .disclaimer-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #64748b;
+    }
+    .panel {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-desc {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: -4px;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .grid-basic {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 4px;
+    }
+    .form-group input, .form-group select {
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+      width: 100%;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: 2px solid var(--primary);
+      border-color: transparent;
+    }
+    .year-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .year-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .year-card-title {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: #1e293b;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .field-row label {
+      color: #475569;
+      font-weight: 500;
+    }
+    .field-row input {
+      width: 65px;
+      padding: 4px 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      text-align: right;
+      font-size: 13px;
+    }
+    .action-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .btn-recalc {
+      width: 100%;
+      padding: 12px 18px;
+      background-color: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 2px 4px rgba(37,99,235,0.25);
+      transition: background-color 0.15s ease;
+      text-align: center;
+    }
+    .btn-recalc:hover {
+      background-color: var(--primary-hover);
+    }
+    .btn-hint {
+      font-size: 12px;
+      color: #dc2626;
+      font-weight: 600;
+      text-align: center;
+    }
+    .schedule-reference {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .schedule-reference h3 {
+      margin: 0 0 6px 0;
+      font-size: 13.5px;
+      color: #1e40af;
+    }
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .tag-special {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      font-weight: 600;
+    }
+    .table-container {
+      background: #fff;
+      padding: 14px 12px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+    }
+    .scroll-hint {
+      display: block;
+      font-size: 11.5px;
+      color: #64748b;
+      margin-bottom: 8px;
+      text-align: right;
+    }
+    .table-scroll-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 3px;
+      min-width: 66px;
+    }
+    th {
+      background-color: #f8fafc;
+      color: #475569;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    /* 凍結首欄 (Sticky Left Column) 讓手機滑動依然清楚項目 */
+    .header-col {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background-color: #f1f5f9 !important;
+      font-weight: bold;
+      min-width: 95px;
+      max-width: 100px;
+      text-align: left;
+      padding-left: 6px;
+      box-shadow: 2px 0 4px rgba(0,0,0,0.05);
+    }
+    thead th.header-col {
+      z-index: 3;
+    }
+    .total-col {
+      background-color: #f8fafc;
+      font-weight: bold;
+      min-width: 72px;
+      white-space: nowrap;
+    }
+    .bg-pay-cell {
+      background-color: var(--pay-bg) !important;
+    }
+    .item-label {
+      font-size: 10.5px;
+      color: var(--pay-text);
+      font-weight: bold;
+      line-height: 1.2;
+      display: block;
+      margin-bottom: 2px;
+      min-height: 28px;
+      word-break: break-all;
+    }
+    .cell-input {
+      width: 92%;
+      border: 1px solid transparent;
+      background: transparent;
+      text-align: center;
+      font-size: 12px;
+      padding: 3px 0;
+      border-radius: 3px;
+    }
+    .cell-input:focus {
+      border-color: var(--primary);
+      background: #fff;
+      outline: none;
+    }
+    .danger {
+      color: var(--danger);
+      font-weight: bold;
+      background-color: #fef2f2 !important;
+    }
+    .bg-deposit-total {
+      background-color: #dcfce7 !important;
+      color: #166534;
+    }
+    .bg-pay-total {
+      background-color: #ffedd5 !important;
+      color: #9a3412;
+    }
+
+    /* 桌機與平板大螢幕優化 */
+    @media (min-width: 768px) {
+      body {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .action-row {
+        flex-direction: row;
+        align-items: center;
+      }
+      .btn-recalc {
+        width: auto;
+      }
+      .btn-hint {
+        text-align: left;
+      }
+      .scroll-hint {
+        display: none;
+      }
+      .header-col {
+        min-width: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>嵐庭苑 - 購屋現金流與期程試算表</h1>
+
+  <!-- 說明與免責條款區塊 -->
+  <div class="intro-banner">
+    <div class="intro-title">💡 本試算表用途說明</div>
+    <div class="intro-desc">
+      本工具專為<strong>「嵐庭苑」已購戶</strong>設計，旨在協助您掌握興建期間各工程節點之預估付款時程，並結合個人儲蓄規劃進行動態現金流試算，以便提早做好資金配置與財務調度。
+    </div>
+
+    <!-- 詳細操作使用步驟指南 -->
+    <div class="user-guide">
+      <strong>📖 試算表使用操作指南：</strong>
+      <ol>
+        <li><strong>輸入房屋總金額（含車位）</strong>：填入購買房戶及車位之成交總價（單位：萬元）。系統將自動依照各工程趴數計算各期應繳款。</li>
+        <li><strong>選擇簽約購買年月</strong>：設定您實際簽約之月份（2026/10 ～ 2027/08）。系統會將 7% 的訂金與簽約款自動安排在此月，現金流亦由此月正式起算。</li>
+        <li><strong>設定簽約前持有存款</strong>：輸入簽約前預計可動用之初始活期/儲蓄存款（單位：萬元）。</li>
+        <li><strong>設定各年份每月存款淨收入</strong>：於 Step 2 依年度自訂平常每月薪資可穩定存下來的「每月儲蓄金額」。</li>
+        <li><strong>設定各年份年終獎金預估</strong>：於各年度卡片填寫預計存入的「年終獎金金額」，並於上方選擇每年固定發放之月份。</li>
+      </ol>
+      <span class="guide-tip">⚠️ 特別提醒：輸入或修改完上述各項參數後，請務必點擊下方的「點此重新試算現金流」按鈕，下方才會生成並更新完整的動態試算表！</span>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>⚠️ 估算參考與免責聲明：</strong><br>
+      1. 本表所載之工程進度與各期預估付款月份（含開工款116年9月、各期工程款及預收款等），皆為現階段接待中心銷售所提供之<strong>初步預估時程</strong>。實際請款進度與金額將依建商實際施工進度、使照取得時程及現場正式工程繳款通知單為準。<br>
+      2. 本工具僅供買方個人財務試算與理財規劃參考，非屬任何形式之正式合約、繳款依據或法律承諾。製作者對未來工程期程異動、繳款金額差異或使用者之任何財務決策均不負任何法律責任。後續若有最新施工進度與期程調整，將會同步更新此表。
+    </div>
+  </div>
+
+  <!-- 期程節點快速導覽 -->
+  <div class="schedule-reference">
+    <h3>📌 付款期程與工程節點明細參考（含開工款116/9 3%）</h3>
+    <div class="tag-container">
+      <span class="tag">訂簽款 7%（訂金2% + 簽約5%）</span>
+      <span class="tag">開工款 3% (116.09 / 2027.09)</span>
+      <span class="tag">工程款1：排樁完成 1% (116.11 / 2027.11)</span>
+      <span class="tag">工程款2：開挖第一層完成 1% (117.02 / 2028.02)</span>
+      <span class="tag">工程款3：大底板完成 1% (117.06 / 2028.06)</span>
+      <span class="tag">工程款4：地下二層完成 1% (117.10 / 2028.10)</span>
+      <span class="tag">工程款5：一樓板完成 1% (118.01 / 2029.01)</span>
+      <span class="tag">工程款6：四樓板完成 1% (118.04 / 2029.04)</span>
+      <span class="tag">工程款7：七樓板完成 1% (118.07 / 2029.07)</span>
+      <span class="tag">工程款8：十一樓板完成 1% (118.11 / 2029.11)</span>
+      <span class="tag">工程款9：十五樓板完成 1% (119.03 / 2030.03)</span>
+      <span class="tag">工程款10：十九樓板完成 1% (119.07 / 2030.07)</span>
+      <span class="tag tag-special">工程款11：屋突板完成 1% + 暫收款20萬 (119.11 / 2030.11)</span>
+      <span class="tag">工程款12：室內隔間完成 1% (120.03 / 2031.03)</span>
+      <span class="tag">工程款13：鋁窗安裝完成 1% (120.07 / 2031.07)</span>
+      <span class="tag">工程款14：使照掛件 1% (120.11 / 2031.11)</span>
+      <span class="tag">工程款15：使照取得 1% (121.02 / 2032.02)</span>
+      <span class="tag">貸款 70% & 交屋款 5%</span>
+    </div>
+  </div>
+
+  <!-- 輸入設定面板 -->
+  <div class="panel">
+    <div class="section-title">Step 1. 房屋總價與簽約基準設定</div>
+    <div class="grid-basic">
+      <div class="form-group">
+        <label>房屋總價（含車位，萬元）：</label>
+        <input type="number" id="totalPrice" value="1000" step="10">
+      </div>
+      <div class="form-group">
+        <label>簽約購買年月（訂簽款 7% 繳款月份）：</label>
+        <select id="signDate">
+          <option value="2026-10">2026 / 10</option>
+          <option value="2026-11" selected>2026 / 11</option>
+          <option value="2026-12">2026 / 12</option>
+          <option value="2027-01">2027 / 01</option>
+          <option value="2027-02">2027 / 02</option>
+          <option value="2027-03">2027 / 03</option>
+          <option value="2027-04">2027 / 04</option>
+          <option value="2027-05">2027 / 05</option>
+          <option value="2027-06">2027 / 06</option>
+          <option value="2027-07">2027 / 07</option>
+          <option value="2027-08">2027 / 08</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>簽約前持有之「目前存款金額」（萬元）：</label>
+        <input type="number" id="initDeposit" value="200" step="5">
+      </div>
+      <div class="form-group">
+        <label>年終獎金預計發放月份：</label>
+        <input type="number" id="bonusMonth" value="2" min="1" max="12">
+      </div>
+    </div>
+
+    <div class="section-title">Step 2. 各年份儲蓄計畫設定（2026 ~ 2032）</div>
+    <div class="section-desc">
+      說明：請在此設定每年平常「每月薪資預計可固定存下的金額」，以及每年固定發放一次的「年終獎金存入金額」。系統將自動在您設定的年終月份疊加計算。
+    </div>
+    <div class="year-grid" id="yearGridInputs"></div>
+
+    <div class="action-row">
+      <button class="btn-recalc" onclick="renderTable()">👉 點此重新試算現金流</button>
+      <span class="btn-hint">← 調整完上方任何數值後，請點擊此按鈕即時更新下方表格</span>
+    </div>
+  </div>
+
+  <!-- 現金流試算輸出表格 -->
+  <div class="table-container">
+    <div class="section-title">Step 3. 逐月收支與存款現金流明細表（點擊任一表格金額可自由手動微調）</div>
+    <span class="scroll-hint">👉 手機瀏覽可向右滑動查看完整月份 👉</span>
+    <div id="tablesOutput"></div>
+  </div>
+</div>
+
+<script>
+  const fixedMilestones = [
+    { key: "2027-09", rate: 3.0, extra: 0, name: "開工款 (3%)" },
+    { key: "2027-11", rate: 1.0, extra: 0, name: "排樁工程 (1%)" },
+    { key: "2028-02", rate: 1.0, extra: 0, name: "開挖第一層完成 (1%)" },
+    { key: "2028-06", rate: 1.0, extra: 0, name: "大底板完成 (1%)" },
+    { key: "2028-10", rate: 1.0, extra: 0, name: "地下二層完成 (1%)" },
+    { key: "2029-01", rate: 1.0, extra: 0, name: "一樓板完成 (1%)" },
+    { key: "2029-04", rate: 1.0, extra: 0, name: "四樓板完成 (1%)" },
+    { key: "2029-07", rate: 1.0, extra: 0, name: "七樓板完成 (1%)" },
+    { key: "2029-11", rate: 1.0, extra: 0, name: "十一樓板完成 (1%)" },
+    { key: "2030-03", rate: 1.0, extra: 0, name: "十五樓板完成 (1%)" },
+    { key: "2030-07", rate: 1.0, extra: 0, name: "十九樓板完成 (1%)" },
+    { key: "2030-11", rate: 1.0, extra: 20, name: "屋突板(1%)+暫收款20萬" },
+    { key: "2031-03", rate: 1.0, extra: 0, name: "室內隔間完成 (1%)" },
+    { key: "2031-07", rate: 1.0, extra: 0, name: "鋁窗安裝完成 (1%)" },
+    { key: "2031-11", rate: 1.0, extra: 0, name: "使照掛件 (1%)" },
+    { key: "2032-02", rate: 1.0, extra: 0, name: "使照取得 (1%)" }
+  ];
+
+  const defaultYearConfig = {};
+  for (let y = 2026; y <= 2032; y++) {
+    defaultYearConfig[y] = { monthly: 1.0, bonus: 5.0 };
+  }
+
+  function initYearInputs() {
+    const container = document.getElementById('yearGridInputs');
+    container.innerHTML = '';
+    for (let y = 2026; y <= 2032; y++) {
+      const conf = defaultYearConfig[y];
+      container.innerHTML += `
+        <div class="year-card">
+          <div class="year-card-title">${y} 年度</div>
+          <div class="field-row">
+            <label>每月薪水儲蓄：</label>
+            <div><input type="number" id="m_sav_${y}" value="${conf.monthly}" step="0.5"> 萬</div>
+          </div>
+          <div class="field-row">
+            <label>年終獎金存入：</label>
+            <div><input type="number" id="b_sav_${y}" value="${conf.bonus}" step="1"> 萬</div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  let state = {};
+
+  function setupDefaultState() {
+    const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
+    const signDate = document.getElementById('signDate').value;
+    const bonusMonth = parseInt(document.getElementById('bonusMonth').value) || 2;
+
+    state = {};
+
+    const scheduleMap = {};
+    scheduleMap[signDate] = { rate: 7.0, extra: 0, name: "訂金(2%)+簽約(5%)" };
+
+    fixedMilestones.forEach(m => {
+      scheduleMap[m.key] = { rate: m.rate, extra: m.extra || 0, name: m.name };
+    });
+
+    for (let y = 2026; y <= 2032; y++) {
+      const mSave = parseFloat(document.getElementById(`m_sav_${y}`).value) || 0;
+      const bSave = parseFloat(document.getElementById(`b_sav_${y}`).value) || 0;
+
+      for (let m = 1; m <= 12; m++) {
+        const key = `${y}-${m < 10 ? '0' + m : m}`;
+        
+        let payVal = 0;
+        let itemName = "";
+        if (scheduleMap[key]) {
+          const basePay = (totalPrice * (scheduleMap[key].rate / 100));
+          payVal = Math.round((basePay + scheduleMap[key].extra) * 10) / 10;
+          itemName = scheduleMap[key].name;
+        }
+
+        let savVal = 0;
+        if (key >= signDate) {
+          savVal = mSave + (m === bonusMonth ? bSave : 0);
+        }
+
+        state[key] = {
+          pay: payVal,
+          itemName: itemName,
+          saving: savVal
+        };
+      }
+    }
+  }
+
+  function calculateAndRender() {
+    const startDeposit = parseFloat(document.getElementById('initDeposit').value) || 0;
+    const signDate = document.getElementById('signDate').value;
+    let currentBal = startDeposit;
+
+    const tablesContainer = document.getElementById('tablesOutput');
+    tablesContainer.innerHTML = '';
+
+    for (let y = 2026; y <= 2032; y++) {
+      let yearPaySum = 0;
+      let yearSaveSum = 0;
+
+      let itemRowHtml = `<td class="header-col">項目名稱</td>`;
+      let payRowHtml = `<td class="header-col">應繳 (萬)</td>`;
+      let saveRowHtml = `<td class="header-col">存款+ (萬)</td>`;
+      let remRowHtml = `<td class="header-col">餘額 (萬)</td>`;
+
+      for (let m = 1; m <= 12; m++) {
+        const key = `${y}-${m < 10 ? '0' + m : m}`;
+        const item = state[key];
+
+        const pVal = item.pay || 0;
+        const sVal = item.saving || 0;
+
+        yearPaySum += pVal;
+        yearSaveSum += sVal;
+
+        if (key < signDate) {
+          remRowHtml += `<td>-</td>`;
+        } else if (key === signDate) {
+          currentBal = startDeposit + sVal - pVal;
+          const dangerClass = currentBal < 0 ? 'danger' : '';
+          remRowHtml += `<td class="${dangerClass}"><b>${currentBal.toFixed(1)}</b></td>`;
+        } else {
+          currentBal = currentBal + sVal - pVal;
+          const dangerClass = currentBal < 0 ? 'danger' : '';
+          remRowHtml += `<td class="${dangerClass}">${currentBal.toFixed(1)}</td>`;
+        }
+
+        const payClass = (pVal > 0 || item.itemName) ? 'bg-pay-cell' : '';
+        itemRowHtml += `<td class="${payClass}"><span class="item-label">${item.itemName || '-'}</span></td>`;
+
+        payRowHtml += `<td class="${payClass}">
+          <input type="number" class="cell-input" value="${pVal === 0 ? '' : pVal}" 
+                 onchange="updateCell('${key}', 'pay', this.value)" />
+        </td>`;
+
+        saveRowHtml += `<td>
+          <input type="number" class="cell-input" value="${sVal === 0 ? '' : sVal}" 
+                 onchange="updateCell('${key}', 'saving', this.value)" />
+        </td>`;
+      }
+
+      itemRowHtml += `<td class="total-col">-</td>`;
+      payRowHtml += `<td class="total-col bg-pay-total">${yearPaySum.toFixed(1)}</td>`;
+      saveRowHtml += `<td class="total-col bg-deposit-total">${yearSaveSum.toFixed(1)}</td>`;
+      remRowHtml += `<td class="total-col">-</td>`;
+
+      const tableHtml = `
+        <div class="table-scroll-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th class="header-col">項目 / 月</th>
+                ${[...Array(12).keys()].map(i => `<th>${y}/${i + 1}</th>`).join('')}
+                <th class="total-col">${y} 加總</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>${itemRowHtml}</tr>
+              <tr>${payRowHtml}</tr>
+              <tr>${saveRowHtml}</tr>
+              <tr>${remRowHtml}</tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+      tablesContainer.innerHTML += tableHtml;
+    }
+  }
+
+  function updateCell(key, field, val) {
+    state[key][field] = parseFloat(val) || 0;
+    calculateAndRender();
+  }
+
+  function renderTable() {
+    setupDefaultState();
+    calculateAndRender();
+  }
+
+  window.onload = function() {
+    initYearInputs();
+    renderTable();
+  };
+</script>
+</body>
+</html>
