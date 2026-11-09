@@ -13,6 +13,7 @@
       --pay-bg: #ffedd5;
       --pay-text: #9a3412;
       --danger: #dc2626;
+      --success: #16a34a;
     }
     * {
       box-sizing: border-box;
@@ -31,7 +32,7 @@
       margin: 0 auto;
     }
     h1 {
-      font-size: 19px;
+      font-size: 20px;
       margin: 8px 0 14px 0;
       color: #0f172a;
       display: flex;
@@ -95,7 +96,7 @@
       padding: 16px;
       border-radius: 10px;
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .section-title {
       font-size: 14.5px;
@@ -210,6 +211,70 @@
       font-weight: 600;
       text-align: center;
     }
+
+    /* 核心財務統計摘要看板 (KPI Summary Cards) */
+    .kpi-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .kpi-card {
+      background: #ffffff;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .kpi-card:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+    }
+    .kpi-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+    .kpi-sub {
+      font-size: 11.5px;
+      color: #94a3b8;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+    .kpi-card.highlight-blue {
+      border-top: 4px solid var(--primary);
+    }
+    .kpi-card.highlight-orange {
+      border-top: 4px solid #ea580c;
+      background: #fffbf7;
+    }
+    .kpi-card.highlight-purple {
+      border-top: 4px solid #7c3aed;
+      background: #fbf9ff;
+    }
+    .kpi-card.highlight-green {
+      border-top: 4px solid #16a34a;
+    }
+    .kpi-card.highlight-orange .kpi-value {
+      color: #c2410c;
+    }
+    .kpi-card.highlight-purple .kpi-value {
+      color: #6d28d9;
+    }
+
     .schedule-reference {
       background: #eff6ff;
       border: 1px solid #bfdbfe;
@@ -281,7 +346,7 @@
       font-weight: 600;
       white-space: nowrap;
     }
-    /* 凍結首欄 (Sticky Left Column) 讓手機滑動依然清楚項目 */
+    /* 凍結首欄 (Sticky Left Column) */
     .header-col {
       position: sticky;
       left: 0;
@@ -344,7 +409,46 @@
       color: #9a3412;
     }
 
-    /* 桌機與平板大螢幕優化 */
+    /* 底部全期彙總統計區塊 */
+    .grand-summary-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .grand-summary-card h4 {
+      margin: 0 0 10px 0;
+      font-size: 15px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .grand-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .summary-item {
+      background: #fff;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .summary-item-label {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .summary-item-val {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 2px;
+    }
+
     @media (min-width: 768px) {
       body {
         padding: 20px;
@@ -474,11 +578,65 @@
     </div>
   </div>
 
+  <!-- 新增：核心財務試算指標卡片 (KPI Dashboard) -->
+  <div class="kpi-container">
+    <div class="kpi-card highlight-blue">
+      <div class="kpi-label">🏠 房屋總價（含車位）</div>
+      <div class="kpi-value" id="kpiTotalPrice">1,000.0 萬</div>
+      <div class="kpi-sub">基准購買成交總金額</div>
+    </div>
+
+    <div class="kpi-card highlight-orange">
+      <div class="kpi-label">💳 累計總付款（自備款）</div>
+      <div class="kpi-value" id="kpiTotalPay">270.0 萬</div>
+      <div class="kpi-sub" id="kpiTotalPaySub">含工程款 25% + 暫收款 20 萬</div>
+    </div>
+
+    <div class="kpi-card highlight-purple">
+      <div class="kpi-label">🏦 剩餘需要貸款金額</div>
+      <div class="kpi-value" id="kpiLoanNeeded">730.0 萬</div>
+      <div class="kpi-sub" id="kpiLoanSub">計算公式：總價 - 總付款 (佔總價 73.0%)</div>
+    </div>
+
+    <div class="kpi-card highlight-green">
+      <div class="kpi-label">💰 2032年底剩餘存款</div>
+      <div class="kpi-value" id="kpiFinalBalance">-- 萬</div>
+      <div class="kpi-sub" id="kpiBalanceSub">全程繳款後動態累積結餘</div>
+    </div>
+  </div>
+
   <!-- 現金流試算輸出表格 -->
   <div class="table-container">
     <div class="section-title">Step 3. 逐月收支與存款現金流明細表（點擊任一表格金額可自由手動微調）</div>
     <span class="scroll-hint">👉 手機瀏覽可向右滑動查看完整月份 👉</span>
     <div id="tablesOutput"></div>
+
+    <!-- 底部整體資金結算彙整 -->
+    <div class="grand-summary-card">
+      <h4>📑 嵐庭苑 2026 ~ 2032 現金流整體結算摘要</h4>
+      <div class="grand-summary-grid">
+        <div class="summary-item">
+          <div class="summary-item-label">房屋成交總價</div>
+          <div class="summary-item-val" id="sumTotalPrice">1000.0 萬元</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">興建期累計總付款</div>
+          <div class="summary-item-val" style="color: #c2410c;" id="sumTotalPay">270.0 萬元</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">總價 - 總付款（剩餘需貸款）</div>
+          <div class="summary-item-val" style="color: #6d28d9;" id="sumLoanNeeded">730.0 萬元</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">興建期累積總儲蓄</div>
+          <div class="summary-item-val" style="color: #15803d;" id="sumTotalSave">-- 萬元</div>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: #64748b; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 8px;">
+        💡 <strong>貸款成數小常識提醒：</strong><br>
+        本預售合約規劃自備款 25%（訂簽7% + 開工3% + 工程款15%）、貸款 70%、交屋款 5%。若交屋款 5% 亦以自備款結清，銀行實際申貸金額約為 <strong>總價 70%（約 <span id="hintBankLoan">700</span> 萬元）</strong>；上方「剩餘需要貸款金額」係依您指定公式【總價 - 累計總付款】計算，若您在上方各期表格中額外自訂調整繳款金額，該數值亦會即時連動重新計算。
+      </div>
+    </div>
   </div>
 </div>
 
@@ -574,9 +732,13 @@
   }
 
   function calculateAndRender() {
+    const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
     const startDeposit = parseFloat(document.getElementById('initDeposit').value) || 0;
     const signDate = document.getElementById('signDate').value;
     let currentBal = startDeposit;
+
+    let grandTotalPay = 0;
+    let grandTotalSave = 0;
 
     const tablesContainer = document.getElementById('tablesOutput');
     tablesContainer.innerHTML = '';
@@ -626,6 +788,9 @@
         </td>`;
       }
 
+      grandTotalPay += yearPaySum;
+      grandTotalSave += yearSaveSum;
+
       itemRowHtml += `<td class="total-col">-</td>`;
       payRowHtml += `<td class="total-col bg-pay-total">${yearPaySum.toFixed(1)}</td>`;
       saveRowHtml += `<td class="total-col bg-deposit-total">${yearSaveSum.toFixed(1)}</td>`;
@@ -652,6 +817,34 @@
       `;
       tablesContainer.innerHTML += tableHtml;
     }
+
+    // 計算總付款與剩餘需貸款金額
+    grandTotalPay = Math.round(grandTotalPay * 10) / 10;
+    const loanNeeded = Math.round((totalPrice - grandTotalPay) * 10) / 10;
+    const loanRatio = totalPrice > 0 ? ((loanNeeded / totalPrice) * 100).toFixed(1) : 0;
+    const bankStandard70 = Math.round((totalPrice * 0.7) * 10) / 10;
+
+    // 更新頂部 KPI 指標看板
+    document.getElementById('kpiTotalPrice').innerText = totalPrice.toFixed(1) + ' 萬';
+    document.getElementById('kpiTotalPay').innerText = grandTotalPay.toFixed(1) + ' 萬';
+    document.getElementById('kpiLoanNeeded').innerText = loanNeeded.toFixed(1) + ' 萬';
+    document.getElementById('kpiLoanSub').innerText = `公式：總價 - 總付款 (佔總價 ${loanRatio}%)`;
+    document.getElementById('kpiFinalBalance').innerText = currentBal.toFixed(1) + ' 萬';
+    
+    if (currentBal < 0) {
+      document.getElementById('kpiFinalBalance').style.color = '#dc2626';
+      document.getElementById('kpiBalanceSub').innerHTML = '<span style="color:#dc2626; font-weight:bold;">⚠️ 資金出現缺口，需提高儲蓄</span>';
+    } else {
+      document.getElementById('kpiFinalBalance').style.color = '#16a34a';
+      document.getElementById('kpiBalanceSub').innerText = '全程收支平衡，資金充裕';
+    }
+
+    // 更新底部彙總卡片
+    document.getElementById('sumTotalPrice').innerText = totalPrice.toFixed(1) + ' 萬元';
+    document.getElementById('sumTotalPay').innerText = grandTotalPay.toFixed(1) + ' 萬元';
+    document.getElementById('sumLoanNeeded').innerText = loanNeeded.toFixed(1) + ` 萬元 (${loanRatio}%)`;
+    document.getElementById('sumTotalSave').innerText = grandTotalSave.toFixed(1) + ' 萬元';
+    document.getElementById('hintBankLoan').innerText = bankStandard70.toFixed(1);
   }
 
   function updateCell(key, field, val) {
